@@ -121,4 +121,4 @@ seq(10) | { süßigkeiten -> spielen("A", süßigkeiten) } | stdout
 
 </details>
 
-<footer>stdin | stdout</footer>
+<footer>⬛⬜🚢⏳</footer>
