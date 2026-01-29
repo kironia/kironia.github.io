@@ -1,0 +1,77 @@
+gewünschtesErgebnis = (spieler) -> {
+    spieler + " gewinnt"
+}
+
+gegenteiliges = (spieler) -> {
+
+    if (spieler == "A") {
+        "B"
+    } else {
+        "A"
+    }
+
+}
+
+beendenFallsUngültig = (spieler, süßigkeiten) -> {
+    
+    if (süßigkeiten > 50) {
+        print("zu viele Süßigkeiten")
+        exit(1)
+    } else if (süßigkeiten < 1) {
+        print("Die Anzahl der Süßigkeiten muss positiv sein.")
+        exit(1)
+    } else if (spieler != "A") {
+    
+        if (spieler != "B") {
+            print("Der Spieler muss entweder 'A' oder 'B' sein.")
+            exit(1)
+        }
+        
+    }
+    
+}
+
+spielen = {
+
+    case _, 1 -> ergebnis = "das Remis" #  Wenn nur noch ein Bonbon übrig ist, endet das Spiel unentschieden.
+    case spieler, 2 -> gewünschtesErgebnis(spieler) # Ich kann sie alle essen.
+    case spieler, 3 -> gewünschtesErgebnis(spieler) # ebenso
+    case spieler, süßigkeiten ->
+        beendenFallsUngültig(spieler, süßigkeiten)
+        basisergebnis = spielen(gegenteiliges(spieler), süßigkeiten - 2)
+
+        if (basisergebnis == "das Remis") {
+            # Es dürfte ein Unentschieden werden.
+            remisErgebnis = spielen(gegenteiliges(spieler), süßigkeiten - 3)
+                   
+            if (gewünschtesErgebnis(spieler) == remisErgebnis) {
+                # Ich möchte nicht, dass der andere Spieler gewinnt.
+                ergebnis = remisErgebnis
+            } else {
+                # Es ist ein Remis.
+                ergebnis = basisergebnis
+            }
+                    
+        } else if (basisergebnis == gewünschtesErgebnis(spieler)) {
+            # Der Spieler ist mit dem Ergebnis zufrieden.
+            ergebnis = basisergebnis
+        } else {
+            # Ich möchte gewinnen, aber der andere Spieler gewinnt.
+            ergebnis = spielen(gegenteiliges(spieler), süßigkeiten - 3)
+        }
+
+}
+
+seq(10) | { süßigkeiten -> spielen("A", süßigkeiten) } | stdout
+
+# Output
+# das Remis
+# A gewinnt
+# A gewinnt
+# das Remis
+# B gewinnt
+# das Remis
+# A gewinnt
+# A gewinnt
+# das Remis
+# B gewinnt
